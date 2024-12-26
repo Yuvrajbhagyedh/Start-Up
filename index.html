@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lazy Loading Example</title>
+    <style>
+        img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .placeholder {
+            background-color: #ccc;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="placeholder">Scroll down to see images load...</div>
+    <img data-src="bg.jpeg" alt="Example 1" class="lazy">
+    <img data-src="school.jpeg" alt="Example 2" class="lazy">
+    <img data-src="warley.jpg" alt="Example 3" class="lazy">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const lazyImages = document.querySelectorAll('.lazy');
+
+            const lazyLoad = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src; // Set the actual source
+                        img.classList.remove('lazy');
+                        observer.unobserve(img); // Stop observing once loaded
+                    }
+                });
+            };
+
+            const observer = new IntersectionObserver(lazyLoad);
+
+            lazyImages.forEach(image => {
+                observer.observe(image);
+            });
+        });
+    </script>
+</body>
+</html>
